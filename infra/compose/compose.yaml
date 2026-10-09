@@ -1,0 +1,18 @@
+name: polytrader-nextgen
+
+services:
+  postgres:
+    image: postgres:17.6-alpine
+    environment:
+      POSTGRES_DB: polytrader
+      POSTGRES_USER: polytrader
+      POSTGRES_PASSWORD: ${POLYTRADER_POSTGRES_PASSWORD:?Set POLYTRADER_POSTGRES_PASSWORD in your environment or .env file.}
+    ports:
+      - "127.0.0.1:${POLYTRADER_POSTGRES_PORT:-54329}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U polytrader -d polytrader"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - ./data:/var/lib/postgresql/data
